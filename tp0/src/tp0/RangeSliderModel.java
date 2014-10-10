@@ -2,15 +2,7 @@ package tp0;
 
 public interface RangeSliderModel {
 
-	/*	-listeners
-	 * 	-min/max slide
-	 * 	-min/max interval
-	 * 	
-	 * minS<=minInt<=MaxInt<=MaxS
-	 * 
-	 * 
-	 */
-	
+
 	// check minS<=minInt<=maxInter <= maxS
 	
 	public int getMinSlide();
@@ -22,4 +14,14 @@ public interface RangeSliderModel {
 	public int getMaxInterval();
 	
 	public int getStep();
+	
+	public int setMinSlide();
+
+	public int setMaxSlide();
+	
+	public int setMinInterval();
+	
+	public int setMaxInterval();
+	
+	public int setStep();
 }
