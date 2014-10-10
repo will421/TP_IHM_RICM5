@@ -5,7 +5,7 @@
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>100</x>
-      <y>130</y>
+      <y>120</y>
       <w>210</w>
       <h>70</h>
     </coordinates>
@@ -17,7 +17,7 @@ mouseIn</panel_attributes>
     <type>com.umlet.element.custom.State</type>
     <coordinates>
       <x>290</x>
-      <y>160</y>
+      <y>150</y>
       <w>90</w>
       <h>40</h>
     </coordinates>
@@ -28,7 +28,7 @@ mouseIn</panel_attributes>
     <type>com.umlet.element.custom.RegionEndState</type>
     <coordinates>
       <x>320</x>
-      <y>280</y>
+      <y>270</y>
       <w>20</w>
       <h>20</h>
     </coordinates>
@@ -39,7 +39,7 @@ mouseIn</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>260</x>
-      <y>170</y>
+      <y>160</y>
       <w>122</w>
       <h>130</h>
     </coordinates>
@@ -50,15 +50,17 @@ mouseOut</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>210</x>
-      <y>60</y>
-      <w>396</w>
-      <h>140</h>
+      <x>240</x>
+      <y>10</y>
+      <w>444</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 mouseWheel
-+check slide limit
-+move borne (if wheel up, up or right else down or left)</panel_attributes>
-    <additional_attributes>120;100;120;50;200;50;200;120;170;120</additional_attributes>
++move borne (il mouseWheel up, up or right, else down or left)
++ check minSlide&lt;=minInterval&lt;=maxInterval &lt;= maxSlide
++ value correction if out of bound
++ notify</panel_attributes>
+    <additional_attributes>90;140;90;50;230;50;230;160;140;160</additional_attributes>
   </element>
 </diagram>

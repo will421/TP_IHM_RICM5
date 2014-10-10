@@ -4,8 +4,8 @@
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>200</x>
-      <y>110</y>
+      <x>580</x>
+      <y>160</y>
       <w>140</w>
       <h>70</h>
     </coordinates>
@@ -16,8 +16,8 @@ press</panel_attributes>
   <element>
     <type>com.umlet.element.custom.State</type>
     <coordinates>
-      <x>320</x>
-      <y>140</y>
+      <x>700</x>
+      <y>190</y>
       <w>90</w>
       <h>40</h>
     </coordinates>
@@ -27,8 +27,8 @@ press</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>150</x>
-      <y>150</y>
+      <x>530</x>
+      <y>200</y>
       <w>230</w>
       <h>80</h>
     </coordinates>
@@ -37,21 +37,10 @@ release</panel_attributes>
     <additional_attributes>30;30;30;60;210;60;210;30</additional_attributes>
   </element>
   <element>
-    <type>com.umlet.element.custom.State</type>
-    <coordinates>
-      <x>110</x>
-      <y>280</y>
-      <w>90</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>out</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <type>com.umlet.element.custom.RegionEndState</type>
     <coordinates>
-      <x>150</x>
-      <y>400</y>
+      <x>530</x>
+      <y>350</y>
       <w>20</w>
       <h>20</h>
     </coordinates>
@@ -61,25 +50,26 @@ release</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>90</x>
-      <y>150</y>
-      <w>122</w>
-      <h>150</h>
+      <x>450</x>
+      <y>200</y>
+      <w>172</w>
+      <h>170</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-mouseOut</panel_attributes>
-    <additional_attributes>70;130;70;30</additional_attributes>
+mouseOut
++removeHighLight</panel_attributes>
+    <additional_attributes>90;150;90;30</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>230</x>
-      <y>20</y>
+      <x>610</x>
+      <y>70</y>
       <w>410</w>
       <h>150</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-drag
+mouseMove
 + check minSlide&lt;=minInterval&lt;=maxInterval &lt;= maxSlide
 + value correction if out of bound
 + notify</panel_attributes>
@@ -88,8 +78,8 @@ drag
   <element>
     <type>com.umlet.element.custom.State</type>
     <coordinates>
-      <x>140</x>
-      <y>140</y>
+      <x>520</x>
+      <y>190</y>
       <w>90</w>
       <h>40</h>
     </coordinates>
@@ -99,8 +89,8 @@ drag
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>10</x>
-      <y>110</y>
+      <x>390</x>
+      <y>160</y>
       <w>150</w>
       <h>94</h>
     </coordinates>
@@ -108,17 +98,5 @@ drag
 mouseIn
 +highlight</panel_attributes>
     <additional_attributes>130;50;30;50</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>80</x>
-      <y>290</y>
-      <w>150</w>
-      <h>130</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-removeHighlight</panel_attributes>
-    <additional_attributes>80;110;80;30</additional_attributes>
   </element>
 </diagram>
