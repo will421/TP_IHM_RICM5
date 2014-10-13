@@ -46,33 +46,28 @@ public class DefaultRangeSliderModel implements RangeSliderModel {
 	}
 
 	@Override
-	public int setMinSlide() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setMinSlide(int val) {
+		_minS = val;
 	}
 
 	@Override
-	public int setMaxSlide() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setMaxSlide(int val) {
+		_maxS = val;
 	}
 
 	@Override
-	public int setMinInterval() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setMinInterval(int val) {
+		_minInterval = val;
 	}
 
 	@Override
-	public int setMaxInterval() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setMaxInterval(int val) {
+		_maxInterval = val;
 	}
 
 	@Override
-	public int setStep() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void setStep(int val) {
+		_step = val;
 	}
 
 }

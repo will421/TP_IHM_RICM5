@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 public class testRangeSlider {
@@ -24,7 +25,7 @@ public class testRangeSlider {
 	    fenetre.setVisible(true);
 	    
 	    RangeSlider slider = new RangeSlider(50,350, 100, 200, 1);
-	    //slider.setVisible(true);
+	    slider.setVisible(true);
 	    //slider.setPreferredSize(new Dimension(300, 200));
 	    fenetre.getContentPane().add(slider);
 	    //fenetre.pack();

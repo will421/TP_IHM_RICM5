@@ -15,13 +15,13 @@ public interface RangeSliderModel {
 	
 	public int getStep();
 	
-	public int setMinSlide();
+	public void setMinSlide(int val);
 
-	public int setMaxSlide();
+	public void setMaxSlide(int val);
 	
-	public int setMinInterval();
+	public void setMinInterval(int val);
 	
-	public int setMaxInterval();
+	public void setMaxInterval(int val);
 	
-	public int setStep();
+	public void setStep(int val);
 }
