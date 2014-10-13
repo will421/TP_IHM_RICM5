@@ -123,14 +123,14 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		// TODO Auto-generated method stub
+		//TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+		//TODO Auto-generated method stub
 		
 	}
 
@@ -152,7 +152,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 
