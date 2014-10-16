@@ -16,6 +16,8 @@ import javax.swing.text.LayeredHighlighter;
 
 
 
+
+
 public class RangeSlider extends JComponent implements MouseListener, MouseMotionListener, MouseWheelListener {
 
 	protected RangeSliderModel rangeSliderModel;
@@ -28,6 +30,15 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	private Color trackColor = Color.RED;
 	private Color intervalColor = Color.BLUE;
 	private Color boundColor = Color.GREEN;
+	
+	enum AUTOMATON_STATE {
+		MOUSE_OVER,
+		MOUSE_GRABBED,
+		MOUSE_LAZY, MOUSE_RELEASED
+	}
+	
+	
+	AUTOMATON_STATE currentState = AUTOMATON_STATE.MOUSE_LAZY;
 	
 	
 	private Rectangle trackRect;
@@ -45,6 +56,8 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
+		
+		
 	}
 	
 	
@@ -60,20 +73,20 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		
 		//track
 		int slideLength = maxPx;
-		trackRect.setBounds(0, 0,slideLength, trackHeight);
+		trackRect.setBounds(padding, padding,slideLength, trackHeight);
 		
 		//interval
 		int xpos =  (int) (model.getMinInterval()*rapport);
 		int sWidth = (int) ((model.getMaxInterval()-model.getMinInterval())*rapport);
-		intervalRect.setBounds(xpos, (trackHeight-slideHeight)/2, sWidth, slideHeight);
+		intervalRect.setBounds(xpos+padding, (trackHeight-slideHeight)/2+padding, sWidth, slideHeight);
 		
 		//minBound
 		int bWidth = (int) (model.getMinInterval()*rapport);
-		minBoundRect.setBounds(bWidth,(trackHeight-handleHeight)/2,handleWidth,handleHeight);
+		minBoundRect.setBounds(bWidth+padding,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
 		
 		//maxBound
 		bWidth = (int) ((model.getMaxInterval())*rapport -handleWidth);
-		maxBoundRect.setBounds(bWidth,(trackHeight-handleHeight)/2,handleWidth,handleHeight);
+		maxBoundRect.setBounds(bWidth+padding,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
 	}
 	
 	//dessin sliderUI
@@ -95,7 +108,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		//minPx = 
 		//border
 		g.drawRect(0, 0, getWidth(), getHeight());
-		g.translate(padding, padding);
+		//g.translate(padding, padding);
 		
 		//track
 		g.setColor(trackColor);
@@ -110,7 +123,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		//g.fillRect(bWidth,(trackHeight-handleHeight)/2,handleWidth,handleHeight);
 		g2.fill(minBoundRect);
 		g.setColor(Color.black);
-		//g2.drawString(Integer.toString(model.getMinInterval()), minBoundRect.x, minBoundRect.y); 
+		g2.drawString(Integer.toString(model.getMinInterval()), minBoundRect.x, minBoundRect.y); 
 		//-> Create an exception
 		
 		//maxBound
@@ -130,14 +143,15 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+
+			
 		
 	}
 
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
@@ -151,14 +165,22 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if(minBoundRect.contains(e.getPoint())){
+			currentState = AUTOMATON_STATE.MOUSE_OVER;
+			System.out.println(e.getPoint().toString());
+			System.out.println("Mouse pressed");
+		}
 
 	}
 
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		if( currentState == AUTOMATON_STATE.MOUSE_RELEASED){
+			System.out.println("Mouse relachée");
+			System.out.println(e.getPoint().toString());
+			currentState = AUTOMATON_STATE.MOUSE_LAZY;
+		}
 		
 	}
 
