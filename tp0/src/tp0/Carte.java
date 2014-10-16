@@ -30,9 +30,7 @@ public class Carte extends JPanel  {
 		    	int price = randomClass.randomInt();
 		    	Home maison = new Home(i, 5, pos, price);
 		    	HomeList.add(maison);
-		    	
 		    }
-		 
 	 }
 	
 	 

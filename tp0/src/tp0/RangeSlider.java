@@ -16,9 +16,8 @@ import javax.swing.text.LayeredHighlighter;
 
 
 
-
-
-public class RangeSlider extends JComponent implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class RangeSlider extends JComponent implements MouseListener, MouseMotionListener, MouseWheelListener,RangeSliderListener {
+>>>>>>> origin/master
 
 	protected RangeSliderModel rangeSliderModel;
 	
@@ -56,8 +55,9 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
-		
-		
+
+		rangeSliderModel.addRangeSliderListener(this);
+
 	}
 	
 	
@@ -99,14 +99,6 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		
 		RangeSliderModel model = rangeSliderModel;
 		
-		/*int minPx = 0;
-		int maxPx = this.getWidth()-2*padding;
-		int minTrack = model.getMinSlide();
-		int maxTrack = model.getMaxSlide();
-		float rapport = (float)maxPx/maxTrack;*/
-		
-		//minPx = 
-		//border
 		g.drawRect(0, 0, getWidth(), getHeight());
 		//g.translate(padding, padding);
 		
@@ -136,7 +128,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		// TODO Auto-generated method stub
+		//TODO Auto-generated method stub
 		
 	}
 
@@ -144,7 +136,6 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	@Override
 	public void mouseDragged(MouseEvent e) {
 
-			
 		
 	}
 
@@ -165,22 +156,23 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+
 		if(minBoundRect.contains(e.getPoint())){
 			currentState = AUTOMATON_STATE.MOUSE_OVER;
 			System.out.println(e.getPoint().toString());
 			System.out.println("Mouse pressed");
 		}
 
-	}
 
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
 		if( currentState == AUTOMATON_STATE.MOUSE_RELEASED){
 			System.out.println("Mouse relachée");
 			System.out.println(e.getPoint().toString());
 			currentState = AUTOMATON_STATE.MOUSE_LAZY;
 		}
+
+		System.out.println("Released");
+		rangeSliderModel.setMaxInterval(rangeSliderModel.getMaxInterval()-1);
+
 		
 	}
 
@@ -197,6 +189,21 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	@Override
+	public void rangeSliderChanged(RangeSliderModel model) {
+		updateRectangles();
+		repaint();
+	}
+
+
+	@Override
+	public void minBoundChanged(int oldValue, int newValue) {}
+
+
+	@Override
+	public void maxBoundChanged(int oldValue, int newValue) {}
 	
 	
 	
