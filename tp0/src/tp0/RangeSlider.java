@@ -112,6 +112,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		float a = (float)(yB-yA)/(xB-xA);
 		float b = yA-a*xA;
 		int res = Math.round(a*val+b);
+		
 		return res;
 	}
 	
@@ -121,7 +122,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		RangeSliderModel model = rangeSliderModel;
 		
 		//track
-		trackRect.setBounds(toPx(0),vPadding,toPx(model.getMaxSlide())-hPadding, trackHeight);
+		trackRect.setBounds(toPx(rangeSliderModel.getMinSlide()),vPadding,toPx(model.getMaxSlide())-hPadding, trackHeight);
 		
 		intervalRect.setBounds(toPx(model.getMinInterval()),vPadding+(trackHeight-slideHeight)/2, toPx(model.getMaxInterval())-toPx(model.getMinInterval()), slideHeight);
 
