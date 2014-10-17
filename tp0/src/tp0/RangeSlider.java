@@ -29,7 +29,8 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	private int handleWidth = 20;
 	private int trackHeight = 10;
 	private int slideHeight = 20;
-	private int padding = 30;
+	private int hPadding = 20;
+	private int vPadding = 20;
 	private String _title = "";
 	private Color trackColor = Color.RED;
 	private Color intervalColor = Color.BLUE;
@@ -90,32 +91,44 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	}
 	
 	
+	private int toValue(int val)
+	{
+
+	}
+	
+	private int toPx(int val)
+	{
+		//int xA = hPadding;
+		int xA = rangeSliderModel.getMinSlide();
+		int yA = 0;
+		int xB = rangeSliderModel.getMaxSlide();
+		//int yB = this.getWidth()-2*hPadding;
+		int yB = this.getWidth();
+		float a = (float)(yB-yA)/(xB-xA);
+		float b = yA-a*xA;
+		int res = Math.round(a*val+b);
+		if(val==rangeSliderModel.getMaxSlide())
+			b++;
+		return res;
+	}
+	
 	private void updateRectangles()
 	{
+		
 		RangeSliderModel model = rangeSliderModel;
 		
-		//int minPx = 0;
-		int maxPx = this.getWidth()-2*padding;
-		//int minTrack = model.getMinSlide();
-		int maxTrack = model.getMaxSlide();
-		float rapport = (float)maxPx/maxTrack;
-		
 		//track
-		int slideLength = maxPx;
-		trackRect.setBounds(padding, padding,slideLength, trackHeight);
+		trackRect.setBounds(toPx(0),vPadding,toPx(this.getWidth()), trackHeight);
 		
-		//interval
-		int xpos =  (int) (model.getMinInterval()*rapport);
-		int sWidth = (int) ((model.getMaxInterval()-model.getMinInterval())*rapport);
-		intervalRect.setBounds(xpos+padding, (trackHeight-slideHeight)/2+padding, sWidth, slideHeight);
-		
+		intervalRect.setBounds(toPx(model.getMinInterval()),vPadding+(trackHeight-slideHeight)/2, toPx(model.getMaxInterval()-model.getMinInterval()), slideHeight);
+		intervalRect.setBounds(0,0,0,0);
 		//minBound
-		int bWidth = (int) (model.getMinInterval()*rapport);
-		minBoundRect.setBounds(bWidth+padding-handleWidth,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
+		minBoundRect.setBounds(toPx(model.getMinInterval())-handleWidth,vPadding+(trackHeight-handleHeight)/2,handleWidth,handleHeight);
+		minBoundRect.setBounds(0,0,0,0);
 		
 		//maxBound
-		bWidth = (int) ((model.getMaxInterval())*rapport -handleWidth);
-		maxBoundRect.setBounds(bWidth+padding+handleWidth,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
+		maxBoundRect.setBounds(toPx(model.getMaxInterval()),vPadding+(trackHeight-handleHeight)/2,handleWidth,handleHeight);
+		maxBoundRect.setBounds(0,0,0,0);
 	}
 	
 	//dessin sliderUI
