@@ -5,6 +5,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Rectangle;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,24 +20,49 @@ import javax.swing.text.LayeredHighlighter;
 
 
 
-public class RangeSlider extends JComponent implements MouseListener, MouseMotionListener, MouseWheelListener,RangeSliderListener {
->>>>>>> origin/master
+public class RangeSlider extends JComponent implements MouseListener, MouseMotionListener, MouseWheelListener,RangeSliderListener{
+
 
 	protected RangeSliderModel rangeSliderModel;
 	
-	private int handleHeight = 15;
-	private int handleWidth = 5;
+	private int handleHeight = 20;
+	private int handleWidth = 20;
 	private int trackHeight = 10;
 	private int slideHeight = 20;
-	private int padding = 10;
+	private int padding = 30;
+	private String _title = "";
 	private Color trackColor = Color.RED;
 	private Color intervalColor = Color.BLUE;
-	private Color boundColor = Color.GREEN;
+	private Color boundColorMin = Color.GREEN;
+	private Color boundColorMax = Color.GREEN;
 	
+	public Color getBoundColorMin() {
+		return boundColorMin;
+	}
+
+
+	public void setBoundColorMin(Color boundColorMin) {
+		this.boundColorMin = boundColorMin;
+	}
+
+
+	public Color getBoundColorMax() {
+		return boundColorMax;
+	}
+
+
+	public void setBoundColorMax(Color boundColorMax) {
+		this.boundColorMax = boundColorMax;
+	}
+
+
 	enum AUTOMATON_STATE {
+		MOUSE_LAZY,
 		MOUSE_OVER,
-		MOUSE_GRABBED,
-		MOUSE_LAZY, MOUSE_RELEASED
+		MOUSE_GRABBED_MIN,
+		MOUSE_GRABBED_MAX,
+		MOUSE_MOVED,
+		MOUSE_RELEASED, MOUSE_OVER_MIN, MOUSE_OVER_MAX
 	}
 	
 	
@@ -45,7 +74,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	private Rectangle minBoundRect;
 	private Rectangle maxBoundRect;
 	
-	public RangeSlider(int minS,int maxS,int minInitInterval,int maxInitInterval,int step) {
+	public RangeSlider(int minS,int maxS,int minInitInterval,int maxInitInterval,int step,String title) {
 		
 		rangeSliderModel = new DefaultRangeSliderModel(minS,maxS,minInitInterval,maxInitInterval,step);
 		trackRect = new Rectangle();
@@ -55,7 +84,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
-
+		_title=title;
 		rangeSliderModel.addRangeSliderListener(this);
 
 	}
@@ -82,11 +111,11 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		
 		//minBound
 		int bWidth = (int) (model.getMinInterval()*rapport);
-		minBoundRect.setBounds(bWidth+padding,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
+		minBoundRect.setBounds(bWidth+padding-handleWidth,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
 		
 		//maxBound
 		bWidth = (int) ((model.getMaxInterval())*rapport -handleWidth);
-		maxBoundRect.setBounds(bWidth+padding,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
+		maxBoundRect.setBounds(bWidth+padding+handleWidth,(trackHeight-handleHeight)/2+padding,handleWidth,handleHeight);
 	}
 	
 	//dessin sliderUI
@@ -94,7 +123,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		super.paintComponent(g);
-		
+		int maxPx = this.getWidth();
 		updateRectangles();
 		
 		RangeSliderModel model = rangeSliderModel;
@@ -111,75 +140,158 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		g2.fill(intervalRect);
 		
 		//minBound
-		g.setColor(boundColor);
+		g.setColor(boundColorMin);
 		//g.fillRect(bWidth,(trackHeight-handleHeight)/2,handleWidth,handleHeight);
 		g2.fill(minBoundRect);
 		g.setColor(Color.black);
-		g2.drawString(Integer.toString(model.getMinInterval()), minBoundRect.x, minBoundRect.y); 
+		g2.drawString(_title, maxPx/8, 20);
+		
+		
+		g2.drawString(Integer.toString(model.getMinInterval()), maxPx/4, 60);
+		
+		g2.drawString(Integer.toString(model.getMaxInterval()), 3*maxPx/4, 60);
 		//-> Create an exception
 		
 		//maxBound
-		g.setColor(boundColor);
+		g.setColor(boundColorMax);
 		g2.fill(maxBoundRect);
 		
 		
-	}
-
-
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		//TODO Auto-generated method stub
+		
 		
 	}
+
 
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 
+		if ( currentState == AUTOMATON_STATE.MOUSE_OVER_MIN){
+			
+			if (minBoundRect.contains(e.getPoint())){
+				
+				System.out.println("Grab Min Bound");
+				currentState = AUTOMATON_STATE.MOUSE_GRABBED_MIN;
+				
+				
+				}
+			
+			}
+		
+		if (currentState == AUTOMATON_STATE.MOUSE_GRABBED_MIN){
+			
+			int n_position;
+			int maxPx = this.getWidth();
+			float rapport = (float) rangeSliderModel.getMaxSlide() / maxPx;
+			
+			
+			n_position = (int) (e.getX() * rapport) ;
+			System.out.println(n_position);
+			rangeSliderModel.setMinInterval(n_position );
+			
+		}
+		
+		if ( currentState == AUTOMATON_STATE.MOUSE_OVER_MAX){
+			
+			if (maxBoundRect.contains(e.getPoint())){
+				
+				System.out.println("Grab Max Bound");
+				currentState = AUTOMATON_STATE.MOUSE_GRABBED_MAX;
+				
+				
+				}
+			
+			}
+		
+		if (currentState == AUTOMATON_STATE.MOUSE_GRABBED_MAX){
+			
+			int n_position;
+			int maxPx = this.getWidth();
+			float rapport = (float) rangeSliderModel.getMaxSlide() / maxPx;
+			
+			
+			n_position = (int) (e.getX() * rapport) ;
+			System.out.println(n_position);
+			rangeSliderModel.setMaxInterval(n_position );
+			
+		}
+		
+		System.out.println(currentState);
 		
 	}
 
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		
+		if (currentState == AUTOMATON_STATE.MOUSE_GRABBED_MIN || currentState == AUTOMATON_STATE.MOUSE_GRABBED_MAX  ){
+			currentState = AUTOMATON_STATE.MOUSE_LAZY;
+			
+		}
+		
+	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	
+		if( currentState == AUTOMATON_STATE.MOUSE_LAZY ){
+			
+			if (minBoundRect.contains(e.getPoint())){
+				
+				currentState = AUTOMATON_STATE.MOUSE_OVER_MIN;
+				setBoundColorMin(Color.CYAN);
+				repaint();
+			}
 
+		}
+		
+		if( currentState == AUTOMATON_STATE.MOUSE_LAZY ){
+			
+			if (maxBoundRect.contains(e.getPoint())){
+				
+				currentState = AUTOMATON_STATE.MOUSE_OVER_MAX;
+				setBoundColorMax(Color.CYAN);
+				repaint();
+			}
+
+		}
+		
+		
+		else if( currentState == AUTOMATON_STATE.MOUSE_OVER_MIN | currentState == AUTOMATON_STATE.MOUSE_OVER_MAX ){
+			
+			
+			if ( ! minBoundRect.contains(e.getPoint()) & ! minBoundRect.contains(e.getPoint())){
+			
+				
+			 setBoundColorMax(Color.GREEN);
+			 setBoundColorMin(Color.GREEN);
+			 repaint();	
+		     currentState = AUTOMATON_STATE.MOUSE_LAZY;	
+			
+			}
+		
+		}	
+		
 		
 	}
 
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 
-		if(minBoundRect.contains(e.getPoint())){
-			currentState = AUTOMATON_STATE.MOUSE_OVER;
-			System.out.println(e.getPoint().toString());
-			System.out.println("Mouse pressed");
-		}
+
+			
 
 
-		if( currentState == AUTOMATON_STATE.MOUSE_RELEASED){
-			System.out.println("Mouse relachée");
-			System.out.println(e.getPoint().toString());
-			currentState = AUTOMATON_STATE.MOUSE_LAZY;
-		}
-
-		System.out.println("Released");
-		rangeSliderModel.setMaxInterval(rangeSliderModel.getMaxInterval()-1);
-
-		
 	}
 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+		
+		
+
 		
 	}
 
@@ -204,7 +316,23 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void maxBoundChanged(int oldValue, int newValue) {}
-	
+
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
 	
 	
 	

@@ -21,6 +21,16 @@ public class Carte extends JPanel  {
 	 
 	 ArrayList<Home> HomeList = new ArrayList<Home>();
 	 
+	 
+	 
+	 public Carte(){
+		 
+		 fillHomeList();
+		 
+		 
+		 
+	 }
+	 
 	 public void fillHomeList(){
 		 
 		    //generation of Random houses with their values
@@ -61,14 +71,20 @@ public class Carte extends JPanel  {
 	    	
 	    	if( maison.getValue()<=Options.MAX_PRICE_SELEC && maison.getValue() >= Options.MIN_PRICE_SELEC) {
 	    		
-		    	g.fillOval(X,Y,10,10);
-		    	g.drawString(Integer.toString(maison.getID()),X+5,Y-5);
+	    		g.setColor(Color.BLACK);
+		    	g.fillOval(X,Y,20,20);
+		    	g.setColor(Color.WHITE);
+		    	g.fillOval(X+1,Y+1,18,18);
+		    	g.setColor(Color.BLACK);
+		   
+		    	g.drawString(Integer.toString(maison.getID()),X+5,Y+15);
 	    		
 	    	}
 	    	
 
 	    }
 	
+	   
 	    
 		
 	}

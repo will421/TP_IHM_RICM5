@@ -7,7 +7,7 @@ import tp0.Options;
 public class randomClass {
 	
   static public final double min_double = 0;
-  static public final double max_double = Options.HAUTEUR_FENETRE;
+  static public final double max_double = Options.DIM_CARTE;
 	
 	
 	static public double randomDouble(){
