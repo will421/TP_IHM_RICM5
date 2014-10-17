@@ -24,7 +24,7 @@ public class testRangeSlider {
 	    //Et enfin, la rendre visible        
 	    fenetre.setVisible(true);
 	    
-	    RangeSlider slider = new RangeSlider(0,200,50,200, 1, "Titre");
+	    RangeSlider slider = new RangeSlider(0,1000,0,100, 1, "Titre");
 	    slider.setVisible(true);
 	    //slider.setPreferredSize(new Dimension(300, 200));
 	    fenetre.getContentPane().add(slider);
