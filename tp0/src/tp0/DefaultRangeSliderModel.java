@@ -135,6 +135,34 @@ public class DefaultRangeSliderModel implements RangeSliderModel {
 		}
 		fireMaxBoundChanged(temp, _maxInterval);
 	}
+	
+	@Override
+	public void setInterval(int min, int max) throws Exception {
+		setCheckInterval(min,max);
+		fireRangeSliderChanged();
+	}
+
+	private void setCheckInterval(int min, int max) throws Exception {
+		int temp = _minInterval;
+		int temp2 = _maxInterval;
+		int delta = _maxInterval - _minInterval;
+		_minInterval = min;
+		_maxInterval = max;
+		if (!check()) {
+			if (!(_minInterval >= _minS)) {
+				_minInterval = _minS;
+				_maxInterval = _minInterval + delta;
+			} else if (!(_maxInterval <= _maxS)) {
+				_maxInterval = _maxS;
+				_minInterval = _maxInterval - delta;
+			} else {
+				throw new Exception("setCheckInterval out of slide bound");
+			}
+		}
+		fireMinBoundChanged(temp,_minInterval);
+		fireMaxBoundChanged(temp2, _maxInterval);
+		
+	}
 
 	@Override
 	public void setStep(int val) {

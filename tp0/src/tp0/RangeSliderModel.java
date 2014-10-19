@@ -25,6 +25,8 @@ public interface RangeSliderModel {
 	
 	public void setStep(int val);
 	
+	public void setInterval(int min, int max) throws Exception;
+	
 	public void addRangeSliderListener(RangeSliderListener listener);
 	
 	public void removeRangeSliderListener(RangeSliderListener listener);

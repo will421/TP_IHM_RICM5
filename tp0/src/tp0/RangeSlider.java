@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
@@ -34,8 +35,17 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	private String _title = "";
 	private Color trackColor = Color.RED;
 	private Color intervalColor = Color.BLUE;
+	private Color intervalHighlight = Color.cyan;
+	private boolean intervalHighlighted = false;
+	private Point intervalGrabbedPoint;
+	
 	private Color boundColorMin = Color.GREEN;
 	private Color boundColorMax = Color.GREEN;
+	private Color boundHighlight = Color.cyan;
+	private boolean boundMinHighlighted = false;
+	private boolean boundMaxHighlighted = false;
+	
+	private Point oldPoint;
 	
 	public Color getBoundColorMin() {
 		return boundColorMin;
@@ -60,14 +70,13 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	enum AUTOMATON_STATE {
 		MOUSE_LAZY,
 		MOUSE_OVER,
-		MOUSE_GRABBED_MIN,
-		MOUSE_GRABBED_MAX,
-		MOUSE_MOVED,
-		MOUSE_RELEASED, MOUSE_OVER_MIN, MOUSE_OVER_MAX
+		MOUSE_GRABBED,
 	}
 	
 	
-	AUTOMATON_STATE currentState = AUTOMATON_STATE.MOUSE_LAZY;
+	AUTOMATON_STATE stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
+	AUTOMATON_STATE stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
+	AUTOMATON_STATE stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
 	
 	
 	private Rectangle trackRect;
@@ -151,11 +160,14 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		g2.fill(trackRect);
 		
 		//interval
-		g.setColor(intervalColor);
+		if(!intervalHighlighted)
+			g.setColor(intervalColor);
+		else
+			g.setColor(intervalHighlight);
 		g2.fill(intervalRect);
 		
 		//minBound
-		g.setColor(boundColorMin);
+		g.setColor(boundMinHighlighted?boundHighlight:boundColorMin);
 		//g.fillRect(bWidth,(trackHeight-handleHeight)/2,handleWidth,handleHeight);
 		g2.fill(minBoundRect);
 		g.setColor(Color.black);
@@ -168,156 +180,146 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		//-> Create an exception
 		
 		//maxBound
-		g.setColor(boundColorMax);
+		g.setColor(boundMaxHighlighted?boundHighlight:boundColorMax);
 		g2.fill(maxBoundRect);
-		
-		
-		
-		
 	}
 
 
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-
-		if ( currentState == AUTOMATON_STATE.MOUSE_OVER_MIN){
 		
-			if (minBoundRect.contains(e.getPoint())){
-				
-				System.out.println("Grab Min Bound");
-				currentState = AUTOMATON_STATE.MOUSE_GRABBED_MIN;
-				
-				
-				}
-			
-			}
-		
-		if (currentState == AUTOMATON_STATE.MOUSE_GRABBED_MIN){
-			
-			int n_position;
-			int maxPx = this.getWidth();
-			float rapport = (float) rangeSliderModel.getMaxSlide() / maxPx;
-			
-			
-			n_position = (int) (e.getX() * rapport) ;
-			System.out.println(n_position);
-			//rangeSliderModel.setMinInterval(n_position );
-			rangeSliderModel.setMinInterval(toValue(e.getX()));
-			
+		if(stateMinBound == AUTOMATON_STATE.MOUSE_GRABBED)
+		{
+			rangeSliderModel.setMinInterval(toValue(e.getX()));	
 		}
-		
-		if ( currentState == AUTOMATON_STATE.MOUSE_OVER_MAX){
-			
-			if (maxBoundRect.contains(e.getPoint())){
-				
-				System.out.println("Grab Max Bound");
-				currentState = AUTOMATON_STATE.MOUSE_GRABBED_MAX;
-				
-				
-				}
-			
-			}
-		
-		if (currentState == AUTOMATON_STATE.MOUSE_GRABBED_MAX){
-			
-			int n_position;
-			int maxPx = this.getWidth();
-			float rapport = (float) rangeSliderModel.getMaxSlide() / maxPx;
-			
-			
-			n_position = (int) (e.getX() * rapport) ;
-			System.out.println(n_position);
-			//rangeSliderModel.setMaxInterval(n_position );
+		else if(stateMaxBound == AUTOMATON_STATE.MOUSE_GRABBED)
+		{
 			rangeSliderModel.setMaxInterval(toValue(e.getX()));
-			
+		} else if(stateInterval == AUTOMATON_STATE.MOUSE_GRABBED/* && intervalRect.contains(new Point(e.getPoint().x,intervalRect.y))*/)
+		{
+			int newMin = toPx(rangeSliderModel.getMinInterval())+e.getPoint().x-oldPoint.x;
+			int newMax = toPx(rangeSliderModel.getMaxInterval())+e.getPoint().x-oldPoint.x;
+			try {
+				rangeSliderModel.setInterval(toValue(newMin),toValue(newMax));
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				System.exit(-1);
+			}
 		}
-		
-		System.out.println(currentState);
-		
+		oldPoint = e.getPoint();
 	}
 
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		
-		if (currentState == AUTOMATON_STATE.MOUSE_GRABBED_MIN || currentState == AUTOMATON_STATE.MOUSE_GRABBED_MAX  ){
-			currentState = AUTOMATON_STATE.MOUSE_LAZY;
-			
+		if(stateMinBound == AUTOMATON_STATE.MOUSE_GRABBED)
+		{
+			stateMinBound = AUTOMATON_STATE.MOUSE_OVER;
 		}
 		
+		if(stateMaxBound == AUTOMATON_STATE.MOUSE_GRABBED)
+		{
+			stateMaxBound = AUTOMATON_STATE.MOUSE_OVER;
+		}
+		
+		if(stateInterval == AUTOMATON_STATE.MOUSE_GRABBED)
+		{
+			stateInterval = AUTOMATON_STATE.MOUSE_OVER;
+		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		System.out.println(e.getX() +" -> "+ toValue(e.getX()) + " -> " + toPx(toValue(e.getX())));
-		if( currentState == AUTOMATON_STATE.MOUSE_LAZY ){
 			
-			if (minBoundRect.contains(e.getPoint())){
-				
-				currentState = AUTOMATON_STATE.MOUSE_OVER_MIN;
-				setBoundColorMin(Color.CYAN);
+		if(minBoundRect.contains(e.getPoint()))
+		{
+			if(stateMinBound== AUTOMATON_STATE.MOUSE_LAZY)
+			{ //mouseEntered
+				stateMinBound = AUTOMATON_STATE.MOUSE_OVER;
+				stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
+				stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
+				boundMinHighlighted = true;
+				boundMaxHighlighted = false;
+				intervalHighlighted = false;
 				repaint();
+			}else if(stateMinBound == AUTOMATON_STATE.MOUSE_OVER) {} 
+			else
+			{
+				System.err.println("MouseMoved && minBoundRect error");
 			}
-
-		}
-		
-		if( currentState == AUTOMATON_STATE.MOUSE_LAZY ){
-			
-			if (maxBoundRect.contains(e.getPoint())){
-				
-				currentState = AUTOMATON_STATE.MOUSE_OVER_MAX;
-				setBoundColorMax(Color.CYAN);
+		} else if(maxBoundRect.contains(e.getPoint()))
+		{
+			if(stateMaxBound== AUTOMATON_STATE.MOUSE_LAZY)
+			{//mouseEntered
+				stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
+				stateMaxBound = AUTOMATON_STATE.MOUSE_OVER;
+				stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
+				boundMinHighlighted = false;
+				boundMaxHighlighted = true;
+				intervalHighlighted = false;
 				repaint();
+			}else if(stateMaxBound == AUTOMATON_STATE.MOUSE_OVER) {} 
+			else
+			{
+				System.err.println("MouseMoved && maxBoundRect error");
 			}
-
+		} else if(intervalRect.contains(e.getPoint()))
+		{
+			if(stateInterval== AUTOMATON_STATE.MOUSE_LAZY)
+			{	//mouseEntered
+				stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
+				stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
+				stateInterval = AUTOMATON_STATE.MOUSE_OVER;
+				boundMinHighlighted = false;
+				boundMaxHighlighted = false;
+				intervalHighlighted = true;
+				repaint();
+			} else if(stateInterval == AUTOMATON_STATE.MOUSE_OVER) {}
+			else
+			{
+				System.err.println("MouseMoved && intervalRect error");
+			}
 		}
-		
-		
-		else if( currentState == AUTOMATON_STATE.MOUSE_OVER_MIN | currentState == AUTOMATON_STATE.MOUSE_OVER_MAX ){
-			
-			
-			if ( ! minBoundRect.contains(e.getPoint()) & ! minBoundRect.contains(e.getPoint())){
-			
-				
-			 setBoundColorMax(Color.GREEN);
-			 setBoundColorMin(Color.GREEN);
-			 repaint();	
-		     currentState = AUTOMATON_STATE.MOUSE_LAZY;	
-			
-			}
-		
-		}	
-		
-		
+		else
+		{
+			stateMinBound= AUTOMATON_STATE.MOUSE_LAZY;
+			stateMaxBound= AUTOMATON_STATE.MOUSE_LAZY;
+			stateInterval= AUTOMATON_STATE.MOUSE_LAZY;
+			boundMinHighlighted = false;
+			boundMaxHighlighted = false;
+			intervalHighlighted = false;
+			repaint();
+		}
+
 	}
-
-
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-
-
-			
-
-
+		if(stateMinBound == AUTOMATON_STATE.MOUSE_OVER)
+		{
+			stateMinBound = AUTOMATON_STATE.MOUSE_GRABBED;
+		} 
+		
+		if(stateMaxBound == AUTOMATON_STATE.MOUSE_OVER)
+		{
+			stateMaxBound = AUTOMATON_STATE.MOUSE_GRABBED;
+		}
+		
+		if(stateInterval == AUTOMATON_STATE.MOUSE_OVER)
+		{
+			stateInterval = AUTOMATON_STATE.MOUSE_GRABBED;
+		}
+		oldPoint = e.getPoint();
 	}
-
-
+	
+	
+	
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		
-		
-
-		
-	}
-
-
+	public void mouseEntered(MouseEvent e) {}
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 
 
 	@Override
@@ -329,24 +331,12 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void minBoundChanged(int oldValue, int newValue) {}
-
-
 	@Override
 	public void maxBoundChanged(int oldValue, int newValue) {}
-
-
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
+	public void mouseWheelMoved(MouseWheelEvent arg0) {}
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseClicked(MouseEvent arg0) {}
 
 
 
