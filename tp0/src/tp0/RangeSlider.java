@@ -335,9 +335,17 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 
 	@Override
-	public void minBoundChanged(int oldValue, int newValue) {}
+	public void minBoundChanged(int oldValue, int newValue) {
+		
+		//rangeSliderModel.setMinInterval(newValue);
+		
+	}
 	@Override
-	public void maxBoundChanged(int oldValue, int newValue) {}
+	public void maxBoundChanged(int oldValue, int newValue) {
+		
+		//rangeSliderModel.setMaxInterval(newValue);
+		
+	}
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {}
 	@Override

@@ -50,7 +50,6 @@ public class Home {
 	
    public void Display(){
 	   System.out.println("[Maison : " + this.ID +"] : Nbpieces : " + this.nb_pieces + ",Position " + this.pos.toString() + ", Prix : " + this.value);
-	   
    }
    
    
