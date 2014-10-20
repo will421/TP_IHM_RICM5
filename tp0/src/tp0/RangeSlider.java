@@ -66,6 +66,11 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		this.boundColorMax = boundColorMax;
 	}
 
+	
+	public RangeSliderModel getModel()
+	{
+		return rangeSliderModel;
+	}
 
 	enum AUTOMATON_STATE {
 		MOUSE_LAZY,

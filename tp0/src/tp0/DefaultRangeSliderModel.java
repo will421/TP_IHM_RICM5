@@ -58,7 +58,7 @@ public class DefaultRangeSliderModel implements RangeSliderModel {
 	@Override
 	public void setMinSlide(int val) {
 		setCheckMinSlide(val);
-		// fire();
+		fireRangeSliderChanged();
 	}
 
 	private void setCheckMinSlide(int val) {
