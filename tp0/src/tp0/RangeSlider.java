@@ -203,8 +203,11 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 			rangeSliderModel.setMaxInterval(toValue(e.getX()));
 		} else if(stateInterval == AUTOMATON_STATE.MOUSE_GRABBED/* && intervalRect.contains(new Point(e.getPoint().x,intervalRect.y))*/)
 		{
-			int newMin = toPx(rangeSliderModel.getMinInterval())+e.getPoint().x-oldPoint.x;
-			int newMax = toPx(rangeSliderModel.getMaxInterval())+e.getPoint().x-oldPoint.x;
+			//int newMin = toPx(rangeSliderModel.getMinInterval())+e.getPoint().x-oldPoint.x;
+			//int newMax = toPx(rangeSliderModel.getMaxInterval())+e.getPoint().x-oldPoint.x;
+			int intSize = toPx(rangeSliderModel.getMaxInterval())-toPx(rangeSliderModel.getMinInterval());
+			int newMin = e.getPoint().x-Math.round((float)intSize/2);
+			int newMax = e.getPoint().x+Math.round((float)intSize/2);
 			try {
 				rangeSliderModel.setInterval(toValue(newMin),toValue(newMax));
 			} catch (Exception e1) {
