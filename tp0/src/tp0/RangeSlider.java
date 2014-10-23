@@ -142,10 +142,10 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		intervalRect.setBounds(toPx(model.getMinInterval()),vPadding+(trackHeight-slideHeight)/2, toPx(model.getMaxInterval())-toPx(model.getMinInterval()), slideHeight);
 
 		//minBound
-		minBoundRect.setBounds(toPx(model.getMinInterval())-handleWidth/2,vPadding+(trackHeight-handleHeight)/2-5,handleWidth,handleHeight);
+		minBoundRect.setBounds(toPx(model.getMinInterval())-handleWidth/2,vPadding+(trackHeight-handleHeight)/2+5,handleWidth,handleHeight);
 		
 		//maxBound
-		maxBoundRect.setBounds(toPx(model.getMaxInterval())-handleWidth/2,vPadding+(trackHeight-handleHeight)/2+5,handleWidth,handleHeight);
+		maxBoundRect.setBounds(toPx(model.getMaxInterval())-handleWidth/2,vPadding+(trackHeight-handleHeight)/2-5,handleWidth,handleHeight);
 	}
 	
 	//dessin sliderUI
@@ -208,8 +208,6 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 			int intervalSize = rangeSliderModel.getMaxInterval()-rangeSliderModel.getMinInterval();
 			int newMin = e.getPoint().x-Math.round((float)intSize/2);
 			int newMax = e.getPoint().x+Math.round((float)intSize/2);
-			//int newMin = e.getPoint().x-(float)intSize/2;
-			//int newMax = e.getPoint().x+(float)intSize/2;
 			if(toValue(newMin)!=rangeSliderModel.getMinInterval())
 				newMax = toPx(toValue(newMin)+intervalSize);
 			else if (toValue(newMax)!=rangeSliderModel.getMaxInterval())
@@ -221,7 +219,6 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 				System.exit(-1);
 			}
 		}
-		oldPoint = e.getPoint();
 	}
 
 	
@@ -348,7 +345,6 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		{
 			stateInterval = AUTOMATON_STATE.MOUSE_GRABBED;
 		}
-		oldPoint = e.getPoint();
 	}
 	
 	@Override
