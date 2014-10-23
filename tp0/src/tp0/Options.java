@@ -10,8 +10,9 @@ public class Options {
   static public final int MIN_PRICE_GEN = 50000;
   static public final int MAX_PRICE_GEN = 150000;
   
-  static public final int MIN_PIECE_GEN  = 0;
+  static public final int MIN_PIECE_GEN  = 1;
   static public final int MAX_PIECE_GEN = 5;
+  public static final int NB_MAISONS = 10;
   
   
 }

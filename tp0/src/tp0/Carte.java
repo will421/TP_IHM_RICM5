@@ -17,7 +17,7 @@ import util.math.randomClass;
 
 public class Carte extends JPanel implements RangeSliderListener {
 
-	static public final int NB_MAISONS = 10;
+
 	
 	private int minPrice = 0;
 	private int maxPrice = 0;
@@ -41,11 +41,12 @@ public class Carte extends JPanel implements RangeSliderListener {
 	public void fillHomeList(){
 
 		//generation of Random houses with their values
-		for (int i=1;i<= NB_MAISONS;i++) {
+		for (int i=1;i<= Options.NB_MAISONS ;i++) {
 
 			GeoPosition pos = new GeoPosition(randomClass.randomDouble(),randomClass.randomDouble());
-			int price = randomClass.randomInt();
-			Home maison = new Home(i, 5, pos, price);
+			int price = randomClass.randomInt(Options.MIN_PRICE_GEN,Options.MAX_PRICE_GEN);
+			int nb_pieces = randomClass.randomInt(Options.MIN_PIECE_GEN, Options.MAX_PIECE_GEN);
+			Home maison = new Home(i, nb_pieces, pos, price);
 			HomeList.add(maison);
 			maison.Display();
 		}
@@ -134,9 +135,15 @@ public class Carte extends JPanel implements RangeSliderListener {
 	@Override
 	public void rangeSliderChanged(RangeSliderModel model) {
 		
-		
-		minPrice =model.getMinInterval();
-		maxPrice = model.getMaxInterval();
+		if (model.get_ID() == 1){
+			minPrice =model.getMinInterval();
+			maxPrice = model.getMaxInterval();
+		}
+		else if(model.get_ID() ==2){
+			minPiece =model.getMinInterval();
+			maxPiece = model.getMaxInterval();
+		}
+
 		repaint();
 	}
 

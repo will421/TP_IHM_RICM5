@@ -89,9 +89,9 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	private Rectangle minBoundRect;
 	private Rectangle maxBoundRect;
 	
-	public RangeSlider(int minS,int maxS,int minInitInterval,int maxInitInterval,int step,String title) {
+	public RangeSlider(int minS,int maxS,int minInitInterval,int maxInitInterval,int step,String title,int id) {
 		
-		rangeSliderModel = new DefaultRangeSliderModel(minS,maxS,minInitInterval,maxInitInterval,step);
+		rangeSliderModel = new DefaultRangeSliderModel(minS,maxS,minInitInterval,maxInitInterval,step,id);
 		trackRect = new Rectangle();
 		intervalRect = new Rectangle();
 		minBoundRect = new Rectangle();

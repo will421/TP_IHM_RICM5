@@ -5,6 +5,8 @@ public interface RangeSliderModel {
 
 	// check minS<=minInt<=maxInter <= maxS
 	
+	public int get_ID();
+	
 	public int getMinSlide();
 
 	public int getMaxSlide();

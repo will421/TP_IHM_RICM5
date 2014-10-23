@@ -6,7 +6,8 @@ import java.util.Collection;
 import javax.swing.event.EventListenerList;
 
 public class DefaultRangeSliderModel implements RangeSliderModel {
-
+	
+	int _ID;
 	int _minS;
 	int _maxS;
 	int _minInterval;
@@ -16,7 +17,8 @@ public class DefaultRangeSliderModel implements RangeSliderModel {
 	private final EventListenerList listeners = new EventListenerList();
 
 	public DefaultRangeSliderModel(int minS, int maxS, int minInitInterval,
-			int maxInitInterval, int step) {
+			int maxInitInterval, int step, int ID) {
+		_ID = ID;
 		_minS = minS;
 		_maxS = maxS;
 		_minInterval = minInitInterval;
@@ -54,6 +56,12 @@ public class DefaultRangeSliderModel implements RangeSliderModel {
 	public int getStep() {
 		return _step;
 	}
+	
+	public int get_ID() {
+		return _ID;
+	}
+
+
 
 	@Override
 	public void setMinSlide(int val) {

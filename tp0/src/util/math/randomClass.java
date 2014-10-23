@@ -19,11 +19,11 @@ public class randomClass {
 		
 	}
 	 
-	static public int randomInt(){
+	static public int randomInt(int min, int max){
 		
 		Random rand = new Random();
 		
-		int randomNum = rand.nextInt((Options.MAX_PRICE_GEN-Options.MIN_PRICE_GEN)+1)+ Options.MIN_PRICE_GEN;
+		int randomNum = rand.nextInt((max-min)+1)+ min;
 		
 		return randomNum;
 		
