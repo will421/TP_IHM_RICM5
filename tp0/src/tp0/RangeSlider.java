@@ -82,6 +82,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 	AUTOMATON_STATE stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
 	AUTOMATON_STATE stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
 	AUTOMATON_STATE stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
+	AUTOMATON_STATE stateTrack = AUTOMATON_STATE.MOUSE_LAZY;
 	
 	
 	private Rectangle trackRect;
@@ -253,6 +254,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 				stateMinBound = AUTOMATON_STATE.MOUSE_OVER;
 				stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
 				stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
+				stateTrack = AUTOMATON_STATE.MOUSE_LAZY;
 				boundMinHighlighted = true;
 				boundMaxHighlighted = false;
 				intervalHighlighted = false;
@@ -269,6 +271,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 				stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
 				stateMaxBound = AUTOMATON_STATE.MOUSE_OVER;
 				stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
+				stateTrack = AUTOMATON_STATE.MOUSE_LAZY;
 				boundMinHighlighted = false;
 				boundMaxHighlighted = true;
 				intervalHighlighted = false;
@@ -285,6 +288,7 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 				stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
 				stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
 				stateInterval = AUTOMATON_STATE.MOUSE_OVER;
+				stateTrack = AUTOMATON_STATE.MOUSE_LAZY;
 				boundMinHighlighted = false;
 				boundMaxHighlighted = false;
 				intervalHighlighted = true;
@@ -295,11 +299,31 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 				System.err.println("MouseMoved && intervalRect error");
 			}
 		}
+		
+		else if(trackRect.contains(e.getPoint()))
+		{
+			if(stateTrack==AUTOMATON_STATE.MOUSE_LAZY)
+			{
+				stateMinBound = AUTOMATON_STATE.MOUSE_LAZY;
+				stateMaxBound = AUTOMATON_STATE.MOUSE_LAZY;
+				stateInterval = AUTOMATON_STATE.MOUSE_LAZY;
+				stateTrack = AUTOMATON_STATE.MOUSE_OVER;
+				boundMinHighlighted = false;
+				boundMaxHighlighted = false;
+				intervalHighlighted = false;
+				repaint();
+			} else if(stateTrack == AUTOMATON_STATE.MOUSE_OVER) {}
+			else
+			{
+				System.err.println("MouseMoved && trackRect error");
+			}
+		}
 		else
 		{
 			stateMinBound= AUTOMATON_STATE.MOUSE_LAZY;
 			stateMaxBound= AUTOMATON_STATE.MOUSE_LAZY;
 			stateInterval= AUTOMATON_STATE.MOUSE_LAZY;
+			stateTrack = AUTOMATON_STATE.MOUSE_LAZY;
 			boundMinHighlighted = false;
 			boundMaxHighlighted = false;
 			intervalHighlighted = false;
@@ -327,12 +351,39 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 		oldPoint = e.getPoint();
 	}
 	
-	
-	
 	@Override
-	public void mouseEntered(MouseEvent e) {}
-	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseWheelMoved(MouseWheelEvent event) {
+		int rotation = event.getWheelRotation();
+		int value;
+		if(stateTrack == AUTOMATON_STATE.MOUSE_OVER)
+		{
+			if(event.getPoint().x<minBoundRect.x) //On bouge la borne inferieur
+			{
+				value = rangeSliderModel.getMinInterval();
+				value -= rotation*rangeSliderModel.getStep();
+				rangeSliderModel.setMinInterval(value);
+			} 
+			else if(event.getPoint().x>minBoundRect.x+minBoundRect.width) //On bouge la borne superieur
+			{
+				value = rangeSliderModel.getMaxInterval();
+				value -= rotation*rangeSliderModel.getStep();
+				rangeSliderModel.setMaxInterval(value);
+			}
+		}
+		else if(stateMinBound == AUTOMATON_STATE.MOUSE_OVER)
+		{
+			value = rangeSliderModel.getMinInterval();
+			value -= rotation*rangeSliderModel.getStep();
+			rangeSliderModel.setMinInterval(value);
+		}
+		else if (stateMaxBound == AUTOMATON_STATE.MOUSE_OVER)
+		{
+			value = rangeSliderModel.getMaxInterval();
+			value -= rotation*rangeSliderModel.getStep();
+			rangeSliderModel.setMaxInterval(value);
+		}
+	}
+
 
 
 	@Override
@@ -344,21 +395,16 @@ public class RangeSlider extends JComponent implements MouseListener, MouseMotio
 
 	@Override
 	public void minBoundChanged(int oldValue, int newValue) {
-		
-		//rangeSliderModel.setMinInterval(newValue);
-		
 	}
 	@Override
 	public void maxBoundChanged(int oldValue, int newValue) {
-		
-		//rangeSliderModel.setMaxInterval(newValue);
-		
 	}
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent arg0) {}
-	@Override
 	public void mouseClicked(MouseEvent arg0) {}
-
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 
 
 	

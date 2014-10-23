@@ -31,7 +31,7 @@ public class Fenetre extends JFrame{
 		contentPane.add(carte,BorderLayout.CENTER);
 		contentPane.add(contentPaneSouth,BorderLayout.SOUTH);
 	    
-	    RangeSlider slider_prix = new RangeSlider(carte.getMinPrice(),carte.getMaxPrice(), carte.getMinPrice(), carte.getMaxPrice(),1,"Selection des prix : ");
+	    RangeSlider slider_prix = new RangeSlider(carte.getMinPrice(),carte.getMaxPrice(), carte.getMinPrice(), carte.getMaxPrice(),10000,"Selection des prix : ");
 	    slider_prix.setPreferredSize(new Dimension(125, 75));
 	    RangeSlider slider_nb_pieces = new RangeSlider(carte.getMinPiece(),carte.getMaxPiece(),carte.getMinPiece(),carte.getMaxPiece(),1,"Nombre de pièces :");
 	    slider_nb_pieces.setPreferredSize(new Dimension(125, 75));
